@@ -175,7 +175,7 @@ describe('project', function() {
       var options = { debug: 'true,test' };
       project.start(projPath, options, function(err) {
         should.not.exist(err);
-        nodemonOpts.nodeArgs.should.containDeep('--debug=' + options.debug);
+        nodemonOpts.nodeArgs.should.containDeep(['--debug=' + options.debug]);
         done();
       });
     });
@@ -184,7 +184,25 @@ describe('project', function() {
       var options = { debugBrk: true };
       project.start(projPath, options, function(err) {
         should.not.exist(err);
-        nodemonOpts.nodeArgs.should.containDeep('--debug-brk');
+        nodemonOpts.nodeArgs.should.containDeep(['--debug-brk']);
+        done();
+      });
+    });
+
+    it('should pass extra arguments', function(done) {
+      var options = { nodeArgs: '--harmony' };
+      project.start(projPath, options, function(err) {
+        should.not.exist(err);
+        nodemonOpts.nodeArgs.should.containDeep(['--harmony']);
+        done();
+      });
+    });
+
+    it('should combine extra arguments with debug', function(done) {
+      var options = { debug: true, nodeArgs: '--harmony' };
+      project.start(projPath, options, function(err) {
+        should.not.exist(err);
+        nodemonOpts.nodeArgs.should.containDeep(['--debug', '--harmony']);
         done();
       });
     });
